@@ -3,6 +3,17 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.VFX;
+public enum EnemyType
+{
+    Archer1,
+    OneHand,
+    TwoHand
+
+}
+public enum PatrolType
+{
+    Linear, Random, Loop
+}
 
 public class EnemyManager : MonoBehaviour
 {
@@ -17,7 +28,8 @@ public class EnemyManager : MonoBehaviour
     private void Start()
     {
         //SpawnAtRandom();
-       //SpawnEnemises();
+        //SpawnEnemises();
+        StartCoroutine(SpawnDelay());
     }
 
     private void Update()
@@ -25,6 +37,7 @@ public class EnemyManager : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.I))
         {
             SpawnAtRandom();
+            
             GetEnemyCount();
         }
 
@@ -41,6 +54,8 @@ public class EnemyManager : MonoBehaviour
 
         }
     }
+
+
 
     /// <summary>
     /// kills a specific enemy
@@ -107,6 +122,24 @@ public class EnemyManager : MonoBehaviour
     }
 
     /// <summary>
+    /// spawn a enemy after a randome amount of time
+    /// </summary>
+    /// <returns></returns>
+
+    IEnumerator SpawnDelay()
+    {
+        for (int i = 0; i < spawnPoints.Length; i++)
+        {
+            int rnd = Random.Range(0, enemyTypes.Length);
+            GameObject enemy = Instantiate(enemyTypes[rnd], spawnPoints[i].position, spawnPoints[i].rotation);
+            yield return new WaitForSeconds(2);
+        }
+       
+        
+
+    }
+
+    /// <summary>
     /// spawns a random eneny at random spawnpoint
     /// </summary>
     void SpawnAtRandom()
@@ -117,6 +150,11 @@ public class EnemyManager : MonoBehaviour
         GameObject enemy = Instantiate(enemyTypes[rndEnemy], spawnPoints[rndSpawnPoint].position, spawnPoints[rndSpawnPoint].rotation);
         //add enemy to enemies list
         enemies.Add(enemy);
+    }
+
+    public Transform GetRandomSpawnpoint()
+    {
+        return spawnPoints[Random.Range(0, spawnPoints.Length)];
     }
 
     void Examples()
