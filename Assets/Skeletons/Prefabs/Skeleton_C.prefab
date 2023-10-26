@@ -2220,6 +2220,7 @@ GameObject:
   - component: {fileID: 449256}
   - component: {fileID: 9520798}
   - component: {fileID: 1353174033164711970}
+  - component: {fileID: -2667270677919144241}
   m_Layer: 0
   m_Name: Skeleton_C
   m_TagString: Untagged
@@ -2278,9 +2279,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 036fe06dcdeaa5640928ab41b76f40b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myType: 1
   moveDistance: 1000
   speed: 5
-  myType: 1
+  myHealth: 0
+  myPatrol: 0
+  moveToPos: {fileID: 0}
+--- !u!136 &-2667270677919144241
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 188982}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.32
+  m_Height: 1.88
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.78, z: 0}
 --- !u!1 &189416
 GameObject:
   m_ObjectHideFlags: 0

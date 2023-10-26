@@ -15,7 +15,7 @@ public enum PatrolType
     Linear, Random, Loop
 }
 
-public class EnemyManager : MonoBehaviour
+public class EnemyManager : Singleton<EnemyManager>
 {
     public Transform[] spawnPoints;
     public string[] enemyNames;
@@ -61,7 +61,7 @@ public class EnemyManager : MonoBehaviour
     /// kills a specific enemy
     /// </summary>
     /// <param name="enemy_">the enemy we want to kill</param>
-    private void KillEnemy(GameObject enemy_)
+    public void KillEnemy(GameObject enemy_)
     {
         if (enemies.Count == 0)
             return;
@@ -118,7 +118,9 @@ public class EnemyManager : MonoBehaviour
         {
             int rnd = Random.Range(0, enemyTypes.Length - 1);
             GameObject enemy = Instantiate(enemyTypes[rnd], spawnPoints[i].position, spawnPoints[i].rotation);
+            enemies.Add(enemy);
         }
+
     }
 
     /// <summary>
@@ -132,6 +134,7 @@ public class EnemyManager : MonoBehaviour
         {
             int rnd = Random.Range(0, enemyTypes.Length);
             GameObject enemy = Instantiate(enemyTypes[rnd], spawnPoints[i].position, spawnPoints[i].rotation);
+            enemies.Add(enemy);
             yield return new WaitForSeconds(2);
         }
        
@@ -142,7 +145,7 @@ public class EnemyManager : MonoBehaviour
     /// <summary>
     /// spawns a random eneny at random spawnpoint
     /// </summary>
-    void SpawnAtRandom()
+    public void SpawnAtRandom()
     {
         int rndEnemy = Random.Range(0, enemyTypes.Length - 1);
         int rndSpawnPoint = Random.Range(0, spawnPoints.Length - 1);
@@ -155,6 +158,19 @@ public class EnemyManager : MonoBehaviour
     public Transform GetRandomSpawnpoint()
     {
         return spawnPoints[Random.Range(0, spawnPoints.Length)];
+    }
+
+    /// <summary>
+    /// event system
+    /// </summary>
+    private void OnEnable()
+    {
+        Enemy.OnEnemyDie += KillEnemy;
+    }
+
+    private void OnDisable()
+    {
+        Enemy.OnEnemyDie -= KillEnemy;
     }
 
     void Examples()

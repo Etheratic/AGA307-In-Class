@@ -1,23 +1,29 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : GameBehaviour
 {
+    public static event Action<GameObject> OnEnemyHit = null;
+    public static event Action<GameObject> OnEnemyDie = null;
+
+
     public EnemyType myType;
     public float moveDistance = 100f;
     public float speed = 1f;
     
-    private int enemyHealth;
-    public int baseHealth;
+    public int myHealth;
+    private int baseHealth = 1;
     float baseSpeed = 1;
+    public int myScore;
 
     [Header("AI")]
     public PatrolType myPatrol;
     //needed for all patrol
     public Transform moveToPos;
 
-    public EnemyManager _EM;
+    
  
     //need for loop patrol
     Transform startPos;
@@ -31,33 +37,66 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
-        _EM = FindObjectOfType<EnemyManager>();
-
 
         switch (myType)
         {
             case EnemyType.Archer1:
-                 enemyHealth = baseHealth / 2;
+                 myHealth = baseHealth / 2;
                 speed = baseSpeed * 2;
                 myPatrol = PatrolType.Loop;
+                myScore = 5;
                 break;
 
             case EnemyType.TwoHand:
-                enemyHealth = baseHealth * 2;
+                myHealth = baseHealth * 2;
                 speed = baseSpeed / 2;
                 myPatrol = PatrolType.Random;
+                myScore = 10;
                 break;
 
             case EnemyType.OneHand:
-                enemyHealth = baseHealth;
+                myHealth = baseHealth;
                 speed = baseSpeed;
                 myPatrol = PatrolType.Linear;
+                myScore = 3;
                 break;
         }
 
         SetUpAI();
     }
 
+   
+    public void Hit(int _damage)
+    {
+        myHealth -= _damage;
+        ScaleObject(this.gameObject, transform.localScale * 1.5f);
+
+        _GM.AddScore(myScore);
+        if (myHealth <= 0)
+        {
+            Die();
+        }
+        else
+        {
+           OnEnemyHit?.Invoke(this.gameObject);
+        }
+       
+            
+        
+    }
+
+    public void Die()
+    {
+        //_GM.AddScore(myPoints);
+        //_EM.KillEnemy(this.gameObject);
+        //Destroy(this.gameObject);
+
+        OnEnemyDie?.Invoke(this.gameObject);
+
+        StopAllCoroutines();
+        
+        
+    }
     void SetUpAI()
     {
         
@@ -71,7 +110,11 @@ public class Enemy : MonoBehaviour
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.Escape))
+
             StopAllCoroutines();
+
+        if (Input.GetKeyDown(KeyCode.H))
+            Hit(30);
     }
 
     IEnumerator Move()
@@ -101,6 +144,16 @@ public class Enemy : MonoBehaviour
         }
         yield return new WaitForSeconds(1);
         StartCoroutine(Move());
+
+       
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.CompareTag("Projectile"))
+        {
+            Hit(collision.gameObject.GetComponent<Projectile>().damage);
+        }
     }
 
     /*IEnumerator Move()

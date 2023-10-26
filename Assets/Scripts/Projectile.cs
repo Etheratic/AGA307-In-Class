@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    
-   
+
+    public int damage = 20;
     void Start()
     {
         Destroy(this.gameObject,5);
@@ -22,6 +22,7 @@ public class Projectile : MonoBehaviour
             Destroy(collision.gameObject, 1);
             //destroy this object
             Destroy(this.gameObject);
+           
         }
         
     }

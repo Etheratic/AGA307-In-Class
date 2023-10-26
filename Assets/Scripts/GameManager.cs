@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 public enum GameState
@@ -12,13 +13,16 @@ public enum Difficulty
     easy, normal, hard
 }
        
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton <GameManager>
 {
     public GameState gameState;
     public Difficulty difficulty;
     public int score = 0;
     int scoreMultiplier = 1;
+   
 
+
+   
     void Start()
     {
         switch(difficulty)
@@ -35,5 +39,27 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    
+    public void AddScore(int _points)
+    {
+        score += _points * scoreMultiplier;
+    }
+
+    private void OnEnemyHit(GameObject _enemy)
+    {
+        int _score = _enemy.GetComponent<Enemy>().myScore;
+        AddScore(score);
+    }
+
+    private void OnEnable()
+    {
+        Enemy.OnEnemyHit += OnEnemyHit;
+        Enemy.OnEnemyDie += OnEnemyHit;
+    }
+
+    private void OnDisable()
+    {
+        Enemy.OnEnemyHit -= OnEnemyHit;
+        Enemy.OnEnemyDie -= OnEnemyHit;
+    }
 }
+    
