@@ -66,10 +66,11 @@ public class EnemyManager : Singleton<EnemyManager>
         if (enemies.Count == 0)
             return;
 
-        GetEnemyCount();
+        
 
         Destroy(enemy_);
         enemies.Remove(enemy_);
+        GetEnemyCount();
     }
 
     /// <summary>
@@ -84,7 +85,7 @@ public class EnemyManager : Singleton<EnemyManager>
         {
             KillEnemy(enemies[0]);
         }
-
+        GetEnemyCount();
     }
 
     /// <summary>
@@ -98,6 +99,7 @@ public class EnemyManager : Singleton<EnemyManager>
             if (enemies[i].name.Contains(_condition))
                 KillEnemy(enemies[i]);
         }
+        GetEnemyCount();
     }
 
     /// <summary>
@@ -105,8 +107,28 @@ public class EnemyManager : Singleton<EnemyManager>
     /// </summary>
     private void GetEnemyCount()
     {
-        print("number of enemies " + enemies.Count);
+        _UI.EnemyCount(enemies.Count);
     }
+    
+    /// <summary>
+    /// Sets a random enemy name
+    /// </summary>
+    /// <param name="_enemy"></param>
+    void SetEnemyName(GameObject _enemy)
+    {
+        //_enemy.GetComponent<Enemy>().SetName(enemyNames[Random.Range(0,enemyNames.Length)]);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public string GetEnemyName()
+    {
+        return enemyNames[Random.Range(0, enemyNames.Length)];
+    }
+
+
     /// <summary>
     /// spawns an enemy at every spawnpoint
     /// </summary>
@@ -119,7 +141,9 @@ public class EnemyManager : Singleton<EnemyManager>
             int rnd = Random.Range(0, enemyTypes.Length - 1);
             GameObject enemy = Instantiate(enemyTypes[rnd], spawnPoints[i].position, spawnPoints[i].rotation);
             enemies.Add(enemy);
+            SetEnemyName(enemy);
         }
+        GetEnemyCount();
 
     }
 
@@ -135,10 +159,13 @@ public class EnemyManager : Singleton<EnemyManager>
             int rnd = Random.Range(0, enemyTypes.Length);
             GameObject enemy = Instantiate(enemyTypes[rnd], spawnPoints[i].position, spawnPoints[i].rotation);
             enemies.Add(enemy);
+            GetEnemyCount();
+            //SetEnemyName(enemy);
             yield return new WaitForSeconds(2);
+           
         }
        
-        
+       
 
     }
 
@@ -153,6 +180,8 @@ public class EnemyManager : Singleton<EnemyManager>
         GameObject enemy = Instantiate(enemyTypes[rndEnemy], spawnPoints[rndSpawnPoint].position, spawnPoints[rndSpawnPoint].rotation);
         //add enemy to enemies list
         enemies.Add(enemy);
+        GetEnemyCount();
+        SetEnemyName(enemy);
     }
 
     public Transform GetRandomSpawnpoint()

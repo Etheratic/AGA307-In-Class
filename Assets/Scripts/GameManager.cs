@@ -42,12 +42,14 @@ public class GameManager : Singleton <GameManager>
     public void AddScore(int _points)
     {
         score += _points * scoreMultiplier;
+        _UI.UpdateScore(score);
     }
 
     private void OnEnemyHit(GameObject _enemy)
     {
         int _score = _enemy.GetComponent<Enemy>().myScore;
-        AddScore(score);
+       
+        AddScore(_score);
     }
 
     private void OnEnable()

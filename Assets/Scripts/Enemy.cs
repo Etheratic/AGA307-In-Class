@@ -12,9 +12,12 @@ public class Enemy : GameBehaviour
     public EnemyType myType;
     public float moveDistance = 100f;
     public float speed = 1f;
+
+    public string myName;
     
     public int myHealth;
-    private int baseHealth = 1;
+    private int baseHealth = 100;
+    int maxHealth;
     float baseSpeed = 1;
     public int myScore;
 
@@ -22,7 +25,7 @@ public class Enemy : GameBehaviour
     public PatrolType myPatrol;
     //needed for all patrol
     public Transform moveToPos;
-
+    EnemyHealthBar healthBar;
     
  
     //need for loop patrol
@@ -41,35 +44,41 @@ public class Enemy : GameBehaviour
         switch (myType)
         {
             case EnemyType.Archer1:
-                 myHealth = baseHealth / 2;
+                 myHealth = maxHealth = baseHealth / 2;
                 speed = baseSpeed * 2;
                 myPatrol = PatrolType.Loop;
                 myScore = 5;
                 break;
 
             case EnemyType.TwoHand:
-                myHealth = baseHealth * 2;
+                myHealth = maxHealth = baseHealth * 2;
                 speed = baseSpeed / 2;
                 myPatrol = PatrolType.Random;
                 myScore = 10;
                 break;
 
             case EnemyType.OneHand:
-                myHealth = baseHealth;
+                myHealth = baseHealth = maxHealth;
                 speed = baseSpeed;
                 myPatrol = PatrolType.Linear;
                 myScore = 3;
                 break;
         }
 
+        SetName(_EM.GetEnemyName());
+        healthBar = GetComponentInChildren<EnemyHealthBar>();
+
         SetUpAI();
+
+
     }
 
    
     public void Hit(int _damage)
     {
         myHealth -= _damage;
-        ScaleObject(this.gameObject, transform.localScale * 1.5f);
+        healthBar.UpdateHealthBar(myHealth, maxHealth);
+        ScaleObject(this.gameObject, transform.localScale * 1.1f);
 
         _GM.AddScore(myScore);
         if (myHealth <= 0)
@@ -107,6 +116,7 @@ public class Enemy : GameBehaviour
     }
       
 
+
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.Escape))
@@ -116,6 +126,14 @@ public class Enemy : GameBehaviour
         if (Input.GetKeyDown(KeyCode.H))
             Hit(30);
     }
+
+    public void SetName(string _name)
+    {
+        myName = _name;
+        healthBar.SetName(_name);
+    }
+
+
 
     IEnumerator Move()
     {
