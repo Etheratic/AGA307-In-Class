@@ -68,7 +68,7 @@ public class EnemyManager : Singleton<EnemyManager>
 
         
 
-        Destroy(enemy_);
+        //Destroy(enemy_);
         enemies.Remove(enemy_);
         GetEnemyCount();
     }

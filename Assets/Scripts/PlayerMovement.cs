@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : GameBehaviour
+public class PlayerMovement : Singleton<PlayerMovement>
 {
     public CharacterController controller;
     public float speed = 10f;
     public float gravity = -9.81f;
     public float jumpHeight = 3f;
+    public float health = 100;
    
     //need to know if we are touching the ground
     public Transform groundCheck;
@@ -39,6 +40,21 @@ public class PlayerMovement : GameBehaviour
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
         
+
+    }
+
+    public void Jump(int _jumpHeight)
+    {
+        velocity.y = Mathf.Sqrt(_jumpHeight * -2f * gravity);
+
+    }
+
+    public void Hit(int _damage)
+    {
+        health -= _damage;
+        if (health < 0)
+            _GM.gameState = GameState.GameOver;
+        print("player health: " + health);
 
     }
 }
