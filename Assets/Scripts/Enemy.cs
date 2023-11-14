@@ -28,7 +28,7 @@ public class Enemy : GameBehaviour
     //needed for all patrol
     public Transform moveToPos;
     EnemyHealthBar healthBar;
-    Animator anim;
+    public Animator anim;
     
  
     //need for loop patrol
@@ -45,7 +45,7 @@ public class Enemy : GameBehaviour
 
     void Start()
     {
-
+        anim = GetComponent<Animator>();
         switch (myType)
         {
             case EnemyType.Archer1:
@@ -74,13 +74,15 @@ public class Enemy : GameBehaviour
         }
 
         //SetName(_EM.GetEnemyName());
+        
+
         healthBar = GetComponentInChildren<EnemyHealthBar>();
 
         SetUpAI();
         if(GetComponentInChildren<EnemyWeapon>() != null)
         GetComponentInChildren<EnemyWeapon>().damage = myDamage;
 
-        anim = GetComponent<Animator>();
+        
     }
 
    

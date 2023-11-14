@@ -1016,10 +1016,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92848d1f9e509ee4ea6a7ab892b2212a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontDestroy: 0
   controller: {fileID: 1072824795}
   speed: 10
   gravity: -9.81
   jumpHeight: 3
+  health: 100
   groundCheck: {fileID: 557816850}
   groundDistance: 0.4
   groundMask:
@@ -1051,7 +1053,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1072824793}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.81, z: -4.83}
+  m_LocalPosition: {x: 0, y: 1.81, z: -9.72}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
